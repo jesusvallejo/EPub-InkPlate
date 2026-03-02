@@ -69,6 +69,10 @@
         #define MSG "Press the WakeUp Button to restart."
         #define INT_PIN TouchScreen::INTERRUPT_PIN
         #define LEVEL 0
+      #elif M5_PAPER_S3
+        #define MSG "Use touch screen to restart."
+        #define INT_PIN GPIO_NUM_36  // GT911 interrupt pin (adjust as needed)
+        #define LEVEL 1
       #else
         #define MSG "Press a key to restart."
         #if EXTENDED_CASE

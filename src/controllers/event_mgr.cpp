@@ -2,7 +2,7 @@
 //
 // MIT License. Look at file licenses.txt for details.
 
-#if INKPLATE_6 || INKPLATE_6_EXTENDED ||INKPLATE_10 || INKPLATE_10_EXTENDED || (EPUB_LINUX_BUILD && !TOUCH_TRIAL)
+#if INKPLATE_6 || INKPLATE_6_EXTENDED ||INKPLATE_10 || INKPLATE_10_EXTENDED || M5_PAPER_S3 || (EPUB_LINUX_BUILD && !TOUCH_TRIAL)
 
 #define __EVENT_MGR__ 1
 #include "controllers/event_mgr.hpp"
@@ -23,10 +23,12 @@
   #include "inkplate_platform.hpp"
   #include "viewers/msg_viewer.hpp"
 
-  #if EXTENDED_CASE
+  #if EXTENDED_CASE && !M5_PAPER_S3
     #include "press_keys.hpp"
-  #else
+  #elif !M5_PAPER_S3
     #include "touch_keys.hpp"
+  #elif M5_PAPER_S3
+    // M5 Paper S3: GT911 touch will be handled differently
   #endif
 
   static QueueHandle_t touchpad_isr_queue   = NULL;
@@ -39,7 +41,7 @@
     xQueueSendFromISR(touchpad_isr_queue, &gpio_num, NULL);
   }
 
-  #if EXTENDED_CASE
+  #if EXTENDED_CASE && !M5_PAPER_S3
     uint8_t   NEXT_PAD;
     uint8_t   PREV_PAD;
     uint8_t SELECT_PAD;
@@ -119,7 +121,7 @@
           HOME_PAD = (1 << static_cast<uint8_t>(PressKeys::Key::U1));
       }
     }
-  #else
+  #elif !M5_PAPER_S3
     uint8_t   NEXT_PAD;
     uint8_t   PREV_PAD;
     uint8_t SELECT_PAD;
