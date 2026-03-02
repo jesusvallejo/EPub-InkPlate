@@ -19,6 +19,7 @@
   void
   BatteryViewer::show()
   {
+    #if !M5_PAPER_S3
     int8_t view_mode = 0;
     config.get(Config::Ident::BATTERY, &view_mode);
 
@@ -104,5 +105,6 @@
       pos.x = 5 + (glyph != nullptr ? glyph->advance : 10) + 5;
       page.put_str_at(str, pos, fmt);
     }
+    #endif  // !M5_PAPER_S3
   }
 #endif

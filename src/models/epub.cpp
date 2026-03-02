@@ -553,7 +553,7 @@ void
 EPub::retrieve_fonts_from_css(CSS & css)
 {
   LOG_D("retrieve_fonts_from_css()");
-  #if EPUB_INKPLATE_BUILD && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
+  #if EPUB_INKPLATE_BUILD && !M5_PAPER_S3 && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
     ESP::show_heaps_info();
   #endif
   #if USE_EPUB_FONTS
@@ -619,7 +619,7 @@ EPub::retrieve_fonts_from_css(CSS & css)
     }
   #endif
   LOG_D("end of retrieve_fonts_from_css()");
-  #if EPUB_INKPLATE_BUILD && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
+  #if EPUB_INKPLATE_BUILD && !M5_PAPER_S3 && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
     ESP::show_heaps_info();
   #endif
 }
@@ -633,7 +633,7 @@ EPub::retrieve_css(ItemInfo & item)
   // being processed.
 
   LOG_D("retrieve_css()");
-  #if EPUB_INKPLATE_BUILD && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
+  #if EPUB_INKPLATE_BUILD && !M5_PAPER_S3 && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
     ESP::show_heaps_info();
   #endif
 
@@ -725,7 +725,7 @@ EPub::retrieve_css(ItemInfo & item)
 
   // item.css->show();
   LOG_D("end of retrieve_css()");
-  #if EPUB_INKPLATE_BUILD && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
+  #if EPUB_INKPLATE_BUILD && !M5_PAPER_S3 && (LOG_LOCAL_LEVEL == ESP_LOG_VERBOSE)
     ESP::show_heaps_info();
   #endif
 }
