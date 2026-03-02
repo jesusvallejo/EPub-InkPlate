@@ -285,10 +285,13 @@
       if (event.kind != EventKind::NONE) {
         LOG_D("Got event %d", (int)event.kind);
         app_controller.input_event(event);
+        #if !M5_PAPER_S3
         ESP::show_heaps_info();
+        #endif
         return;
       }
       else {
+        #if !M5_PAPER_S3
         // Nothing received in 15 seconds, put the device in Light Sleep Mode.
         // After some delay, the device will then be put in Deep Sleep Mode, 
         // rebooting after the user press a key.
@@ -323,6 +326,7 @@
             inkplate_platform.deep_sleep(INT_PIN, 1);
           }
         }
+        #endif
       }
     }
   }
@@ -340,7 +344,7 @@ EventMgr::setup()
     g_signal_connect(G_OBJECT(  screen.home_button), "clicked", G_CALLBACK(  home_clicked), (gpointer) screen.window);
 
   #else
-
+    #if !M5_PAPER_S3
     gpio_config_t io_conf;
 
     io_conf.intr_type    = GPIO_INTR_POSEDGE;   // Interrupt of rising edge
@@ -368,6 +372,7 @@ EventMgr::setup()
     Wire::enter();
     io_expander_int.get_int_state();                        // This is activating interrupts...
     Wire::leave();
+    #endif
   #endif
 
   return true;
