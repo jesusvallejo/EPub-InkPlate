@@ -16,10 +16,10 @@ fi
 
 if [ "$3" = "" ]; then
   echo "Usage: $0 version_nbr type extended_case [build_only]"
-  echo "type = 6, 10, 6plus, 6plusv2, 6flick"
+  echo "type = 6, 10, 6plus, 6plusv2, 6flick, m5paper3"
   echo "extended_case = 0, 1"
   echo "   0 = no extended case"
-  echo "   1 = with extended case"
+  echo "   1 = with extended case (InkPlate only)"
   echo "build_only (optional) = 1, 2"
   echo "   1 = clean build folder"
   echo "   2 = keep build folder"
@@ -27,18 +27,18 @@ if [ "$3" = "" ]; then
 fi
 
 if [ "$3" = "0" ]; then
-  folder="release-v$1-inkplate_$2"
-  environment="inkplate_$2_release"
   case "$2" in
-    "6") device="INKPLATE_6" ;;
-    "10") device="INKPLATE_10" ;;
-    "6plus") device="INKPLATE_6PLUS" ;;
-    "6plusv2") device="INKPLATE_6PLUS_V2" ;;
-    "6flick") device="INKPLATE_6FLICK" ;;
+    "6") device="INKPLATE_6"; folder="release-v$1-inkplate_$2" ;;
+    "10") device="INKPLATE_10"; folder="release-v$1-inkplate_$2" ;;
+    "6plus") device="INKPLATE_6PLUS"; folder="release-v$1-inkplate_$2" ;;
+    "6plusv2") device="INKPLATE_6PLUS_V2"; folder="release-v$1-inkplate_$2" ;;
+    "6flick") device="INKPLATE_6FLICK"; folder="release-v$1-inkplate_$2" ;;
+    "m5paper3") device="M5_PAPER_S3"; folder="release-v$1-m5paper3_$2" ;;
     *) echo "UNKNOWN DEVICE NAME. ABORTING!"
        return 1
        ;;
   esac
+  environment="${2}_release"
   echo "Device is ${device}"
 else
   folder="release-v$1-inkplate_extended_case_$2"
@@ -90,7 +90,7 @@ cp doc/timezones.csv $folder
 
 if [ "$3" = "0" ]; then
   case "$2" in
-    "6plus"|"6plusv2"|"6flick")  cp "doc/USER GUIDE TOUCH.pdf" "$folder/USER GUIDE.pdf" ;;
+    "6plus"|"6plusv2"|"6flick"|"m5paper3")  cp "doc/USER GUIDE TOUCH.pdf" "$folder/USER GUIDE.pdf" ;;
     *) cp "doc/USER GUIDE.pdf" "$folder" ;;
   esac
 else
