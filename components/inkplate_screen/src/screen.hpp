@@ -41,7 +41,7 @@ class Screen : NonCopyable
       static constexpr uint16_t RESOLUTION            = 165;  ///< Pixels per inch
     #endif
     enum class Orientation     : int8_t { LEFT, RIGHT, BOTTOM, TOP };
-    enum class PixelResolution : int8_t { ONE_BIT, THREE_BITS };
+    enum class PixelResolution : int8_t { ONE_BIT, TWO_BITS, THREE_BITS };
     
     enum Color  { WHITE = 0, BLACK = 7 };
 
@@ -57,6 +57,9 @@ class Screen : NonCopyable
     inline void clear()  {
       if (pixel_resolution == PixelResolution::ONE_BIT) { 
         frame_buffer_1bit->clear();
+      }
+      else if (pixel_resolution == PixelResolution::TWO_BITS) {
+        frame_buffer_2bit->clear();
       }
       else {
         frame_buffer_3bit->clear();
@@ -81,6 +84,9 @@ class Screen : NonCopyable
           }
         }
       }
+      else if (pixel_resolution == PixelResolution::TWO_BITS) {
+        e_ink.update(*frame_buffer_2bit);
+      }
       else {
         e_ink.update(*frame_buffer_3bit);
       }
@@ -97,10 +103,12 @@ class Screen : NonCopyable
     static Screen singleton;
     Screen() : partial_count(0), 
                frame_buffer_1bit(nullptr), 
+               frame_buffer_2bit(nullptr),
                frame_buffer_3bit(nullptr) {};
 
     int16_t           partial_count;
     FrameBuffer1Bit * frame_buffer_1bit;
+    FrameBuffer2Bit * frame_buffer_2bit;
     FrameBuffer3Bit * frame_buffer_3bit;
     PixelResolution   pixel_resolution;
     Orientation       orientation;
@@ -138,6 +146,31 @@ class Screen : NonCopyable
         *temp = *temp | LUT1BIT[col & 7];
       else
         *temp = (*temp & ~LUT1BIT[col & 7]);
+    }
+
+    // 2-bit grayscale pixel setters (for M5 Paper S3)
+    inline void set_pixel_o_left_2bit(uint32_t col, uint32_t row, uint8_t color) {
+      uint8_t * temp = &(frame_buffer_2bit->get_data())[frame_buffer_2bit->get_data_size() - (frame_buffer_2bit->get_line_size() * (col + 1)) + (row >> 2)];
+      uint8_t shift = (row & 0x03) << 1;
+      *temp = (*temp & ~(0x03 << shift)) | ((color & 0x03) << shift);
+    }
+
+    inline void set_pixel_o_right_2bit(uint32_t col, uint32_t row, uint8_t color) {
+      uint8_t * temp = &(frame_buffer_2bit->get_data())[(frame_buffer_2bit->get_line_size() * (col + 1)) - (row >> 2) - 1];
+      uint8_t shift = (row & 0x03) << 1;
+      *temp = (*temp & ~(0x03 << shift)) | ((color & 0x03) << shift);
+    }
+
+    inline void set_pixel_o_bottom_2bit(uint32_t col, uint32_t row, uint8_t color) {
+      uint8_t * temp = &(frame_buffer_2bit->get_data())[frame_buffer_2bit->get_line_size() * row + (col >> 2)];
+      uint8_t shift = (col & 0x03) << 1;
+      *temp = (*temp & ~(0x03 << shift)) | ((color & 0x03) << shift);
+    }
+
+    inline void set_pixel_o_top_2bit(uint32_t col, uint32_t row, uint8_t color) {
+      uint8_t * temp = &(frame_buffer_2bit->get_data())[frame_buffer_2bit->get_data_size() - (frame_buffer_2bit->get_line_size() * row) - (col >> 2)];
+      uint8_t shift = (col & 0x03) << 1;
+      *temp = (*temp & ~(0x03 << shift)) | ((color & 0x03) << shift);
     }
 
     inline void set_pixel_o_left_3bit(uint32_t col, uint32_t row, uint8_t color) {

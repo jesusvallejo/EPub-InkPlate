@@ -6,7 +6,7 @@
 // Touch Screen calibration algorithm from: https://www.embedded.com/how-to-calibrate-touch-screens
 //
 
-#if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+#if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
 
 #define __EVENT_MGR__ 1
 #include "controllers/event_mgr.hpp"
@@ -38,6 +38,8 @@ const char * EventMgr::event_str[9] = { "NONE",        "TAP",           "HOLD", 
 
   #if INKPLATE_6FLICK
     #include "touch_screen_cypress.hpp"
+  #elif M5_PAPER_S3
+    #include "touch_screen_gt911.hpp"
   #else
     #include "touch_screen_elan.hpp"
   #endif
