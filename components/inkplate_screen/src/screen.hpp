@@ -35,6 +35,10 @@ class Screen : NonCopyable
       static constexpr int8_t   IDENT                 =   3;
       static constexpr int16_t  PARTIAL_COUNT_ALLOWED =  10;
       static constexpr uint16_t RESOLUTION            = 212;  ///< Pixels per inch
+    #elif M5_PAPER_S3
+      static constexpr int8_t   IDENT                 =   4;
+      static constexpr int8_t   PARTIAL_COUNT_ALLOWED =  10;
+      static constexpr uint16_t RESOLUTION            = 165;  ///< Pixels per inch
     #endif
     enum class Orientation     : int8_t { LEFT, RIGHT, BOTTOM, TOP };
     enum class PixelResolution : int8_t { ONE_BIT, THREE_BITS };
