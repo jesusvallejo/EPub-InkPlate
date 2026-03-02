@@ -221,6 +221,14 @@
         SELECT_PAD = 1;
       }
     }
+  #else
+    // M5_PAPER_S3: Stub implementation (no physical key remapping needed)
+    void
+    EventMgr::set_orientation(Screen::Orientation orient)
+    {
+      // M5 Paper S3 uses GT911 capacitive touch, orientation handled by screen
+      // No key remapping needed
+    }
   #endif
 
   const EventMgr::Event & 
