@@ -35,6 +35,7 @@ const char * EventMgr::event_str[9] = { "NONE",        "TAP",           "HOLD", 
   #include "wire.hpp"
   #include "inkplate_platform.hpp"
   #include "viewers/msg_viewer.hpp"
+  #include "esp.hpp"
 
   #if INKPLATE_6FLICK
     #include "touch_screen_cypress.hpp"

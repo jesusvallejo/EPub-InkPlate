@@ -119,7 +119,7 @@ void MsgViewer::show(
   // Press a Key option
 
   if (press_a_key) {
-    #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+    #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
       if (msg_type != MsgType::CONFIRM) {
         fmt.align       = CSS::Align::CENTER;
         fmt.font_size   =                  9;
@@ -184,7 +184,7 @@ void MsgViewer::show(
 
 bool MsgViewer::confirm(const EventMgr::Event & event, bool & ok)
 {
-  #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+  #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
 
     if (event.kind == EventMgr::EventKind::TAP) {
       if ((event.x >= ok_pos.x) && (event.x <= (ok_pos.x + buttons_dim.width )) &&

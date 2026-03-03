@@ -216,8 +216,8 @@ BooksDirController::leave(bool going_to_deep_sleep)
 
 }
 
-#if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
-  void 
+#if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
+  void
   BooksDirController::input_event(const EventMgr::Event & event)
   {
     static std::string book_fname;

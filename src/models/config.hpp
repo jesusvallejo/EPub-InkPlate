@@ -16,12 +16,18 @@ enum class ConfigIdent {
     NTP_SERVER,
     TIME_ZONE,
   #endif
-  #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK
+  #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3
     CALIB_A, CALIB_B, CALIB_C, CALIB_D, CALIB_E, CALIB_F, CALIB_DIVIDER
   #endif
 };
 
 #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK
+  #if DATE_TIME_RTC
+    typedef ConfigBase<ConfigIdent, 29> Config;
+  #else
+    typedef ConfigBase<ConfigIdent, 26> Config;
+  #endif
+#elif M5_PAPER_S3
   #if DATE_TIME_RTC
     typedef ConfigBase<ConfigIdent, 29> Config;
   #else

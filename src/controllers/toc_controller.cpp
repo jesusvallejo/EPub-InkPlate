@@ -32,8 +32,8 @@ TocController::enter()
   current_entry_index = toc_viewer.show_page_and_highlight(current_entry_index);
 }
 
-#if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
-  void 
+#if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
+  void
   TocController::input_event(const EventMgr::Event & event)
   {
     switch (event.kind) {
