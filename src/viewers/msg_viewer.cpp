@@ -119,7 +119,7 @@ void MsgViewer::show(
   // Press a Key option
 
   if (press_a_key) {
-    #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+    #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
       if (msg_type != MsgType::CONFIRM) {
         fmt.align       = CSS::Align::CENTER;
         fmt.font_size   =                  9;
@@ -184,7 +184,7 @@ void MsgViewer::show(
 
 bool MsgViewer::confirm(const EventMgr::Event & event, bool & ok)
 {
-  #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+  #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
 
     if (event.kind == EventMgr::EventKind::TAP) {
       if ((event.x >= ok_pos.x) && (event.x <= (ok_pos.x + buttons_dim.width )) &&
@@ -349,6 +349,7 @@ MsgViewer::out_of_memory(const char * raison)
 
   screen.force_full_update();
 
+  #if !M5_PAPER_S3
   #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK
     #define MSG "Press the WakeUp Button to restart."
     #define INT_PIN TouchScreen::INTERRUPT_PIN
@@ -377,5 +378,14 @@ MsgViewer::out_of_memory(const char * raison)
     inkplate_platform.deep_sleep(INT_PIN, LEVEL); // Never return
   #else
     exit(0);
+  #endif
+  #else
+  show(ALERT, true, true, "OUT OF MEMORY!!",
+    "It's a bit sad that the device is now out of "
+    "memory to continue. The reason: %s. "
+    "The device will be restarted.",
+    raison
+  );
+  exit(0);
   #endif
 }

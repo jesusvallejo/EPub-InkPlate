@@ -49,7 +49,7 @@ class KeypadViewer
     Font *        font;
     Font::Glyph * glyph;
 
-    #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+    #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
       int8_t get_key_val(uint16_t x, uint16_t y) {
         for (int i = 0; i < (KEY_COUNT - 1); i++) {
           if ((x >= key_locs[i].pos.x) &&
@@ -206,7 +206,7 @@ class KeypadViewer
         .display            = CSS::Display::INLINE
       };
 
-      #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+      #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
         page.start(fmt);
       #endif
 
@@ -279,7 +279,7 @@ class KeypadViewer
             break;
           case -1: // Cancel
             page.put_highlight(key_dim2, the_pos);
-            #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+            #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
               page.put_highlight(Dim(key_dim2.width - 2, key_dim2.height - 2), 
                                  Pos(the_pos.x      + 1, the_pos.y       + 1));
             #endif
@@ -290,7 +290,7 @@ class KeypadViewer
             break;
           case -2: // OK
             page.put_highlight(key_dim, the_pos);
-            #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+            #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
               page.put_highlight(Dim(key_dim.width - 2, key_dim.height - 2), 
                                  Pos(the_pos.x     + 1, the_pos.y      + 1));
             #endif
@@ -333,7 +333,7 @@ class KeypadViewer
       #endif
 
       update_value();
-      #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+      #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
         page.paint(false);
       #endif
     }
@@ -347,7 +347,7 @@ class KeypadViewer
      */
     bool event(const EventMgr::Event & event) {
 
-      #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || TOUCH_TRIAL
+      #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
         if (event.kind == EventMgr::EventKind::TAP) {
           int8_t value = get_key_val(event.x, event.y);
           if (value != 99) {

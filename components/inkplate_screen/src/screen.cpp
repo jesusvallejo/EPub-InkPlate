@@ -461,6 +461,10 @@ Screen::set_pixel_resolution(PixelResolution resolution, bool force)
   if (force || (pixel_resolution != resolution)) {
     pixel_resolution = resolution;
     if (pixel_resolution == PixelResolution::ONE_BIT) {
+      if (frame_buffer_2bit != nullptr) {
+        free(frame_buffer_2bit);
+        frame_buffer_2bit = nullptr;
+      }
       if (frame_buffer_3bit != nullptr) {
         free(frame_buffer_3bit);
         frame_buffer_3bit = nullptr;
@@ -470,10 +474,27 @@ Screen::set_pixel_resolution(PixelResolution resolution, bool force)
       }
       partial_count = 0;
     }
+    else if (pixel_resolution == PixelResolution::TWO_BITS) {
+      if (frame_buffer_1bit != nullptr) {
+        free(frame_buffer_1bit);
+        frame_buffer_1bit = nullptr;
+      }
+      if (frame_buffer_3bit != nullptr) {
+        free(frame_buffer_3bit);
+        frame_buffer_3bit = nullptr;
+      }
+      if ((frame_buffer_2bit = e_ink.new_frame_buffer_2bit()) != nullptr) {
+        frame_buffer_2bit->clear();
+      }
+    }
     else {
       if (frame_buffer_1bit != nullptr) {
         free(frame_buffer_1bit);
         frame_buffer_1bit = nullptr;
+      }
+      if (frame_buffer_2bit != nullptr) {
+        free(frame_buffer_2bit);
+        frame_buffer_2bit = nullptr;
       }
       if ((frame_buffer_3bit = e_ink.new_frame_buffer_3bit()) != nullptr) {
         frame_buffer_3bit->clear();

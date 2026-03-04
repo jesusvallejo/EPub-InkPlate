@@ -13,6 +13,7 @@
 
   #include "controllers/books_dir_controller.hpp"
   #include "controllers/app_controller.hpp"
+  #include "controllers/opds_controller.hpp"
   #include "models/fonts.hpp"
   #include "models/epub.hpp"
   #include "models/config.hpp"
@@ -69,6 +70,10 @@
         #define MSG "Press the WakeUp Button to restart."
         #define INT_PIN TouchScreen::INTERRUPT_PIN
         #define LEVEL 0
+      #elif M5_PAPER_S3
+        #define MSG "Use touch screen to restart."
+        #define INT_PIN GPIO_NUM_36  // GT911 interrupt pin (adjust as needed)
+        #define LEVEL 1
       #else
         #define MSG "Press a key to restart."
         #if EXTENDED_CASE
@@ -141,6 +146,9 @@
         msg_viewer.show(MsgViewer::MsgType::INFO, false, true, "Starting", "One moment please...");
 
         books_dir_controller.setup();
+        #if M5_PAPER_S3
+          opds_controller.setup();
+        #endif
         LOG_D("Initialization completed");
         app_controller.start();
       }
@@ -206,6 +214,7 @@
 
   #include "controllers/books_dir_controller.hpp"
   #include "controllers/app_controller.hpp"
+  #include "controllers/opds_controller.hpp"
   #include "viewers/msg_viewer.hpp"
   #include "models/fonts.hpp"
   #include "models/config.hpp"
@@ -248,6 +257,9 @@
 
       event_mgr.setup();
       books_dir_controller.setup();
+      #if M5_PAPER_S3
+        opds_controller.setup();
+      #endif
 
       #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK
         #define MSG "the WakeUp button"

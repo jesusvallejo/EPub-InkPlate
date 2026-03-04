@@ -2,7 +2,7 @@
 //
 // MIT License. Look at file licenses.txt for details.
 
-#if INKPLATE_6 || INKPLATE_6_EXTENDED ||INKPLATE_10 || INKPLATE_10_EXTENDED || (EPUB_LINUX_BUILD && !TOUCH_TRIAL)
+#if INKPLATE_6 || INKPLATE_6_EXTENDED ||INKPLATE_10 || INKPLATE_10_EXTENDED || M5_PAPER_S3 || (EPUB_LINUX_BUILD && !TOUCH_TRIAL)
 
 #define __EVENT_MGR__ 1
 #include "controllers/event_mgr.hpp"
@@ -23,23 +23,27 @@
   #include "inkplate_platform.hpp"
   #include "viewers/msg_viewer.hpp"
 
-  #if EXTENDED_CASE
+  #if EXTENDED_CASE && !M5_PAPER_S3
     #include "press_keys.hpp"
-  #else
+  #elif !M5_PAPER_S3
     #include "touch_keys.hpp"
+  #elif M5_PAPER_S3
+    // M5 Paper S3: GT911 touch will be handled differently
   #endif
 
-  static QueueHandle_t touchpad_isr_queue   = NULL;
-  static QueueHandle_t touchpad_event_queue = NULL;
+  #if EXTENDED_CASE && !M5_PAPER_S3
+    static QueueHandle_t touchpad_isr_queue   = NULL;
+    static QueueHandle_t touchpad_event_queue = NULL;
 
-  static void IRAM_ATTR 
-  touchpad_isr_handler(void * arg)
-  {
-    uint32_t gpio_num = (uint32_t) arg;
-    xQueueSendFromISR(touchpad_isr_queue, &gpio_num, NULL);
-  }
+    static void IRAM_ATTR 
+    touchpad_isr_handler(void * arg)
+    {
+      uint32_t gpio_num = (uint32_t) arg;
+      xQueueSendFromISR(touchpad_isr_queue, &gpio_num, NULL);
+    }
+  #endif
 
-  #if EXTENDED_CASE
+  #if EXTENDED_CASE && !M5_PAPER_S3
     uint8_t   NEXT_PAD;
     uint8_t   PREV_PAD;
     uint8_t SELECT_PAD;
@@ -119,7 +123,7 @@
           HOME_PAD = (1 << static_cast<uint8_t>(PressKeys::Key::U1));
       }
     }
-  #else
+  #elif !M5_PAPER_S3
     uint8_t   NEXT_PAD;
     uint8_t   PREV_PAD;
     uint8_t SELECT_PAD;
@@ -219,17 +223,38 @@
         SELECT_PAD = 1;
       }
     }
+  #else
+    // M5_PAPER_S3: Stub implementation (no physical key remapping needed)
+    void
+    EventMgr::set_orientation(Screen::Orientation orient)
+    {
+      // M5 Paper S3 uses GT911 capacitive touch, orientation handled by screen
+      // No key remapping needed
+    }
   #endif
 
-  const EventMgr::Event & 
-  EventMgr::get_event() 
-  {
-    static Event event;
-    if (!xQueueReceive(touchpad_event_queue, &event, pdMS_TO_TICKS(15E3))) {
-      event.kind = EventKind::NONE;
+  #if EXTENDED_CASE && !M5_PAPER_S3
+    const EventMgr::Event & 
+    EventMgr::get_event() 
+    {
+      static Event event;
+      if (!xQueueReceive(touchpad_event_queue, &event, pdMS_TO_TICKS(15E3))) {
+        event.kind = EventKind::NONE;
+      }
+      return event;
     }
-    return event;
-}
+  #elif M5_PAPER_S3
+    // M5 Paper S3: GT911 touch events handled via touch_event_mgr
+    const EventMgr::Event & 
+    EventMgr::get_event() 
+    {
+      static Event event;
+      event.kind = EventKind::NONE;
+      // Events from GT911 are processed by touch_event_mgr.cpp
+      // This stub ensures compatibility with the interface
+      return event;
+    }
+  #endif
 
 #else
 
@@ -283,10 +308,13 @@
       if (event.kind != EventKind::NONE) {
         LOG_D("Got event %d", (int)event.kind);
         app_controller.input_event(event);
+        #if !M5_PAPER_S3
         ESP::show_heaps_info();
+        #endif
         return;
       }
       else {
+        #if !M5_PAPER_S3
         // Nothing received in 15 seconds, put the device in Light Sleep Mode.
         // After some delay, the device will then be put in Deep Sleep Mode, 
         // rebooting after the user press a key.
@@ -321,6 +349,7 @@
             inkplate_platform.deep_sleep(INT_PIN, 1);
           }
         }
+        #endif
       }
     }
   }
@@ -338,7 +367,7 @@ EventMgr::setup()
     g_signal_connect(G_OBJECT(  screen.home_button), "clicked", G_CALLBACK(  home_clicked), (gpointer) screen.window);
 
   #else
-
+    #if !M5_PAPER_S3
     gpio_config_t io_conf;
 
     io_conf.intr_type    = GPIO_INTR_POSEDGE;   // Interrupt of rising edge
@@ -366,6 +395,7 @@ EventMgr::setup()
     Wire::enter();
     io_expander_int.get_int_state();                        // This is activating interrupts...
     Wire::leave();
+    #endif
   #endif
 
   return true;
