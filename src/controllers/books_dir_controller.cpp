@@ -237,6 +237,19 @@ BooksDirController::leave(bool going_to_deep_sleep)
         break;
 
       case EventMgr::EventKind::TAP:
+        // Check for menu button tap (top-left corner on M5_PAPER_S3)
+        #if M5_PAPER_S3
+          if (event.y < 60 && event.x < 100) {
+            // Top-left menu button tapped - show options menu with OPDS access
+            ESP_LOGD(TAG, "[MENU] Top-left menu button");
+            current_book_index = -1;
+            // For M5_PAPER_S3, we can add a quick menu here
+            // For now, go directly to options or OPDS
+            app_controller.set_controller(AppController::Ctrl::OPDS);
+            break;
+          }
+        #endif
+        
         if ((viewer_id == MATRIX_VIEWER) || (event.x < (Screen::get_width() / 3))) {
           current_book_index = books_dir_viewer->get_index_at(event.x, event.y);
           if ((current_book_index >= 0) && (current_book_index < books_dir.get_book_count())) {

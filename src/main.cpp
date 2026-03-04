@@ -145,6 +145,9 @@
         msg_viewer.show(MsgViewer::MsgType::INFO, false, true, "Starting", "One moment please...");
 
         books_dir_controller.setup();
+        #if M5_PAPER_S3
+          opds_controller.setup();
+        #endif
         LOG_D("Initialization completed");
         app_controller.start();
       }
@@ -252,6 +255,9 @@
 
       event_mgr.setup();
       books_dir_controller.setup();
+      #if M5_PAPER_S3
+        opds_controller.setup();
+      #endif
 
       #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK
         #define MSG "the WakeUp button"
