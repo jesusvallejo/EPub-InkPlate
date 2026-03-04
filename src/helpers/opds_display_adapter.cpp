@@ -171,7 +171,7 @@ M5EPaperPanel::draw_string(uint16_t x, uint16_t y, const char* text, uint16_t si
 
   // Convert size to approximate character dimensions
   // Typical monospace: 1 char = ~0.6 * font_size width
-  uint16_t char_width = std::max(4u, size / 2);
+  uint16_t char_width = std::max(static_cast<uint16_t>(4), static_cast<uint16_t>(size / 2));
   uint16_t char_height = size;
 
   // For now, use a simple rasterization approach

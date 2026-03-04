@@ -11,7 +11,7 @@
 
 #if M5_PAPER_S3
   #include "helpers/opds_display_adapter.hpp"
-  #include "services/opds_ui_manager.hpp"
+  #include "../../components/ESP-IDF-InkPlate/src/services/opds_ui_manager.hpp"
 #endif
 
 // Global OPDS display panel adapter
