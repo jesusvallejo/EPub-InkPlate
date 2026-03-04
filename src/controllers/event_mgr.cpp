@@ -31,7 +31,8 @@
     // M5 Paper S3: GT911 touch will be handled differently
   #endif
 
-  #if EXTENDED_CASE && !M5_PAPER_S3
+  // Queue handles for touch/key events (used by both EXTENDED_CASE and regular touch)
+  #if !M5_PAPER_S3
     static QueueHandle_t touchpad_isr_queue   = NULL;
     static QueueHandle_t touchpad_event_queue = NULL;
 
