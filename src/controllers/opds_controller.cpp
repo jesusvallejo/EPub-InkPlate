@@ -10,8 +10,13 @@
 #include "models/config.hpp"
 
 #if M5_PAPER_S3
-  #include "m5_device.hpp"  // For M5Paper and panel access
+  #include "helpers/opds_display_adapter.hpp"
   #include "services/opds_ui_manager.hpp"
+#endif
+
+// Global OPDS display panel adapter
+#if M5_PAPER_S3
+  static M5EPaperPanel g_opds_panel;
 #endif
 
 void
@@ -20,19 +25,13 @@ OPDSController::setup()
   LOG_D("OPDS Controller setup");
 
   #if M5_PAPER_S3
-    // Initialize OPDS UI manager with M5Paper panel
-    if (opds_ui_manager) {
-      #if __has_include("m5_device.hpp")
-        extern M5Device m5_device;  // Access global M5Paper device
-        M5EPaperPanel* panel = m5_device.get_panel();
-        if (panel) {
-          if (opds_ui_manager->init(panel)) {
-            LOG_I("OPDS UI Manager initialized");
-          } else {
-            LOG_E("Failed to initialize OPDS UI Manager");
-          }
-        }
-      #endif
+    // Initialize OPDS UI manager with display adapter
+    if (g_opds_ui_manager) {
+      if (g_opds_ui_manager->init(&g_opds_panel)) {
+        LOG_I("OPDS UI Manager initialized");
+      } else {
+        LOG_E("Failed to initialize OPDS UI Manager");
+      }
     }
   #endif
 
@@ -47,8 +46,8 @@ OPDSController::enter()
   needs_refresh = true;
 
   #if M5_PAPER_S3
-    if (opds_ui_manager) {
-      opds_ui_manager->render();
+    if (g_opds_ui_manager) {
+      g_opds_ui_manager->render();
     }
   #endif
 }
@@ -68,7 +67,7 @@ OPDSController::input_event(const EventMgr::Event & event)
   }
 
   #if M5_PAPER_S3
-    if (!opds_ui_manager) {
+    if (!g_opds_ui_manager) {
       return;
     }
 
@@ -76,9 +75,9 @@ OPDSController::input_event(const EventMgr::Event & event)
       case EventMgr::EventKind::TAP:
         // Convert TAP to touch press event
         LOG_D("OPDS: TAP at (%d, %d)", event.x, event.y);
-        opds_ui_manager->on_touch_event(event.x, event.y, true);
+        g_opds_ui_manager->on_touch_event(event.x, event.y, true);
         // Re-render after touch handling
-        opds_ui_manager->render();
+        g_opds_ui_manager->render();
         break;
 
       case EventMgr::EventKind::SWIPE_LEFT:
@@ -92,7 +91,7 @@ OPDSController::input_event(const EventMgr::Event & event)
         LOG_D("OPDS: SWIPE_RIGHT (navigate)");
         
         // For now, use swipe right as "back" to return to books directory
-        if (opds_ui_manager->get_state() == OPDS_STATE_MENU) {
+        if (g_opds_ui_manager->get_state() == OPDS_STATE_MENU) {
           // If already at main menu, go back to books directory
           app_controller.set_controller(AppController::Ctrl::DIR);
         }
@@ -101,7 +100,7 @@ OPDSController::input_event(const EventMgr::Event & event)
       case EventMgr::EventKind::RELEASE:
         // Touch release
         LOG_D("OPDS: RELEASE at (%d, %d)", event.x, event.y);
-        opds_ui_manager->on_touch_event(event.x, event.y, false);
+        g_opds_ui_manager->on_touch_event(event.x, event.y, false);
         break;
 
       case EventMgr::EventKind::HOLD:
