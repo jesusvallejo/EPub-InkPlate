@@ -50,12 +50,14 @@ const char * EventMgr::event_str[9] = { "NONE",        "TAP",           "HOLD", 
   static QueueHandle_t touchscreen_isr_queue   = NULL;
   static QueueHandle_t touchscreen_event_queue = NULL;
 
-  static void IRAM_ATTR 
-  touchscreen_isr_handler(void * arg)
-  {
-    uint32_t gpio_num = (uint32_t) arg;
-    xQueueSendFromISR(touchscreen_isr_queue, &gpio_num, NULL);
-  }
+  #if INKPLATE_6PLUS || INKPLATE_6PLUS_V2 || INKPLATE_6FLICK || M5_PAPER_S3 || TOUCH_TRIAL
+    static void IRAM_ATTR 
+    touchscreen_isr_handler(void * arg)
+    {
+      uint32_t gpio_num = (uint32_t) arg;
+      xQueueSendFromISR(touchscreen_isr_queue, &gpio_num, NULL);
+    }
+  #endif
 
   #define DISTANCE  (sqrt(pow(x_end - x_start, 2) + pow(y_end - y_start, 2)))
   #define DISTANCE2 (sqrt(pow(x[1] - x[0], 2) + pow(y[1] - y[0], 2)))

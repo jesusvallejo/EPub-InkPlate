@@ -34,12 +34,14 @@
   static QueueHandle_t touchpad_isr_queue   = NULL;
   static QueueHandle_t touchpad_event_queue = NULL;
 
-  static void IRAM_ATTR 
-  touchpad_isr_handler(void * arg)
-  {
-    uint32_t gpio_num = (uint32_t) arg;
-    xQueueSendFromISR(touchpad_isr_queue, &gpio_num, NULL);
-  }
+  #if EXTENDED_CASE && !M5_PAPER_S3
+    static void IRAM_ATTR 
+    touchpad_isr_handler(void * arg)
+    {
+      uint32_t gpio_num = (uint32_t) arg;
+      xQueueSendFromISR(touchpad_isr_queue, &gpio_num, NULL);
+    }
+  #endif
 
   #if EXTENDED_CASE && !M5_PAPER_S3
     uint8_t   NEXT_PAD;
