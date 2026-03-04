@@ -13,6 +13,7 @@
 
   #include "controllers/books_dir_controller.hpp"
   #include "controllers/app_controller.hpp"
+  #include "controllers/opds_controller.hpp"
   #include "models/fonts.hpp"
   #include "models/epub.hpp"
   #include "models/config.hpp"
@@ -213,6 +214,7 @@
 
   #include "controllers/books_dir_controller.hpp"
   #include "controllers/app_controller.hpp"
+  #include "controllers/opds_controller.hpp"
   #include "viewers/msg_viewer.hpp"
   #include "models/fonts.hpp"
   #include "models/config.hpp"
