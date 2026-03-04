@@ -233,15 +233,28 @@
     }
   #endif
 
-  const EventMgr::Event & 
-  EventMgr::get_event() 
-  {
-    static Event event;
-    if (!xQueueReceive(touchpad_event_queue, &event, pdMS_TO_TICKS(15E3))) {
-      event.kind = EventKind::NONE;
+  #if EXTENDED_CASE && !M5_PAPER_S3
+    const EventMgr::Event & 
+    EventMgr::get_event() 
+    {
+      static Event event;
+      if (!xQueueReceive(touchpad_event_queue, &event, pdMS_TO_TICKS(15E3))) {
+        event.kind = EventKind::NONE;
+      }
+      return event;
     }
-    return event;
-}
+  #elif M5_PAPER_S3
+    // M5 Paper S3: GT911 touch events handled via touch_event_mgr
+    const EventMgr::Event & 
+    EventMgr::get_event() 
+    {
+      static Event event;
+      event.kind = EventKind::NONE;
+      // Events from GT911 are processed by touch_event_mgr.cpp
+      // This stub ensures compatibility with the interface
+      return event;
+    }
+  #endif
 
 #else
 
