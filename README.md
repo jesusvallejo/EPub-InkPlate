@@ -2,11 +2,11 @@
 
 ## Last news
 
-(Updated 2026.01.20)
+(Updated 2026.03.05)
 
 Update to version 2.1.0
 
-- Now using ESP-IDF framework v5.5.2
+- Now using ESP-IDF framework v5.5.3
 - No longer using PlatformIO. Using cmake through idf.py to build applications
 
 - Added support through the ESP-IDF-InkPlace v0.9.8 project:
