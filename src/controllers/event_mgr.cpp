@@ -244,6 +244,17 @@
       }
       return event;
     }
+  #elif !M5_PAPER_S3
+    // Regular Inkplate (non-extended case with touch keys)
+    const EventMgr::Event & 
+    EventMgr::get_event() 
+    {
+      static Event event;
+      if (!xQueueReceive(touchpad_event_queue, &event, pdMS_TO_TICKS(15E3))) {
+        event.kind = EventKind::NONE;
+      }
+      return event;
+    }
   #elif M5_PAPER_S3
     // M5 Paper S3: GT911 touch events handled via touch_event_mgr
     const EventMgr::Event & 
